@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
 
 const useD = () =>{
-
+    
     const refreshDate = () =>{
     var week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var month = ['Jan','Feb','March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct','Nov','Dec']
@@ -16,8 +16,11 @@ const useD = () =>{
     const refreshTime = () =>{
         var hours = new Date().getHours();
         var mins = new Date().getMinutes();
-        var seconds = new Date().getSeconds();
-        var finalTime = `${hours}:${mins}:${seconds}`;
+        if(mins%10===mins)
+        {
+            mins = '0'+mins;
+        }
+        var finalTime = `${hours}:${mins}`;
         return finalTime;
     }
 
@@ -27,21 +30,16 @@ const useD = () =>{
 
     var finalDateTime = `${refreshTime()} · ${refreshDate()}`;
 
-    var [val, setDate] = React.useState(finalDateTime);
+    const [val, setDate] = useState(finalDateTime);
 
-    React.useEffect=(()=>{
-        try{setTimeout(
-        ()=>{setTimeout(refreshDate,1000);
-        setTimeout(refreshTime,1000);
-        finalDateTime = `${refreshTime()} · ${refreshDate()}`;
-        setDate((val) => val=finalDateTime)},1000);}
-        catch(err){
-            console.log(err);
-        }
-    });
+    function updateDate(){
+        const newDate = `${refreshTime()} · ${refreshDate()}`;
+        setDate(newDate);
+
+    }
     
     
-    
+    setInterval(updateDate,1000);
     return (<Font>{val}</Font> )
 }
 

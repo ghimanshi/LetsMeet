@@ -1,29 +1,33 @@
 import React from 'react';
 import Date from './date'
 import styled from 'styled-components';
-
-
+import gmeet from './../../../assets/icons/gmeet.svg';
+import {BiHelpCircle} from 'react-icons/bi';
+import {MdOutlineFeedback,MdOutlineApps,MdAccountCircle,MdKeyboard} from 'react-icons/md';
+import {IoIosSettings} from 'react-icons/io';
+import {AiOutlineVideoCameraAdd} from 'react-icons/ai';
+import Carousel from './carousel';
 
 const Home=()=>{
     return(
         <HomePage>
             <Nav>
                 <Gmeet>
-                    <img src="" alt="Gmeet Icon"/>
-                    <Title><Font> Meet</Font></Title>
+                    <img src={gmeet} alt="Gmeet Icon" height={50} width={186}/>
                 </Gmeet>
                 <Utilities>
-                    <div className="Date"><Date/></div>
-                    
-                
+                    <IconsDate >
+                        <DateDiv><Date/></DateDiv>
+                        <Sbutton><BiHelpCircle size={24} color="#5F6368"/></Sbutton>
+                        <Sbutton><MdOutlineFeedback size={24} color="#5F6368"/></Sbutton>
+                        <Sbutton><IoIosSettings size={24} color="#5F6368"/></Sbutton>
+                    </IconsDate >
 
-                <div className='icons'>
-                    <button><img src="" alt="help"/></button>
-                    <button><img src="" alt="feedback"/></button>
-                    <button><img src="" alt="settings"/></button>
-                    <button><img src="" alt="googleApps"/></button>
-                    <button className="profile"><img src="" alt="profile"/></button>
-                </div>
+                    <Icons>
+                        
+                        <Sbutton><MdOutlineApps size={24} color="#5F6368"/></Sbutton>
+                        <Sbutton className="profile"><MdAccountCircle size={34} color="#5F6368"/></Sbutton>
+                    </Icons>
                 </Utilities>
             </Nav>
             <Body>
@@ -31,17 +35,27 @@ const Home=()=>{
                 
                 <LargeTextFont>Premium video meetings.<br/>Now free for everyone.</LargeTextFont>
                 <SmallTextFont>
-                    We re-engineered the srvice that we built for secure<br/>business meetings, Google Meet, to make it free and<br/>available for all.
+                    We re-engineered the service that we built for secure<br/>business meetings, Google Meet, to make it free and<br/>available for all.
                 </SmallTextFont>
                 <MeetingLink>
-                    <MeetingButton>New Meeting</MeetingButton>
-                    <MCode type='text' value='Enter a code or link'/>
+                    <MeetingButton><AiOutlineVideoCameraAdd size={20}/><div ><b>New Meeting</b></div></MeetingButton>
+                    <JoinD>
+                    <SearchD>
+                    <Key><MdKeyboard size={24} color="#5F6368"/></Key>
+                    <MCode id='idform' type='text' placeholder='Enter a code or link'></MCode>
+                    </SearchD>
+                    <Join>Join</Join>
+                    </JoinD>
+
+                    
                 </MeetingLink>
                 <Line></Line>
                 <LearnMore><Link>Learn More</Link> about Google Meet</LearnMore>
                 
             </Text>
-            <Caraousel></Caraousel>
+            <Caraousel>
+                <Carousel/>
+            </Caraousel>
             </Body>
         </HomePage>
     );
@@ -49,8 +63,11 @@ const Home=()=>{
 }
 
 export default Home;
-
+const DateDiv = styled.div`
+    padding-right:12px;
+`
 const HomePage=styled.div`
+    margin:0;
     `
 const Nav = styled.div`
     height:50px;
@@ -59,6 +76,10 @@ const Nav = styled.div`
     flex-direction:row;
     justify-content: space-between;
     align-content: center;
+    background-color:white;
+    margin:0;
+    position:sticky;
+    
     `
 
 const Gmeet = styled.div`
@@ -68,25 +89,46 @@ const Gmeet = styled.div`
     justify-conetnt:center;
     height:100%;
     width:fit-content;
+    padding-left:10px;
     `
-const Title = styled.div`
-    font=size:22px;
-    height:fit-content;
-    color:#5F6368;
-    margin:0;`
-    
+
 
 const Utilities = styled.div`
-    display:flex;`
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    width:425px;`
 
-const Font = styled.p`
-    font-size:22px;
-    font-family:sans-serif;`
+const IconsDate = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+`
+const Icons = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+`
+const Sbutton = styled.button`
+    height:48px;
+    width:48px;
+    border:0;
+    background-color:transparent;
+
+`
+
 
 const Text = styled.div`
-    padding: 16px 48px;
+    padding:16px 40px;
     height:fit-content;
-    width:fit-content;
+    width:40%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
     `
 
 
@@ -100,8 +142,6 @@ const LargeTextFont = styled.p`
     padding:0 0 22px;
     margin:0;
     `
-const SmallText = styled.div`
-    `
 const SmallTextFont = styled.p`
     font-size:18px;
     font-family: sans-serif;
@@ -114,20 +154,29 @@ const Body = styled.div`
     display:flex;
     flex-wrap:wrap;
     flex-direction:row;
-    justify-content:space-between;
+    justify-content:center;
     align-content:center;  
     width:100%;
-    height:90vh;  
+    min-height:90vh;
+    position:absolute;
 `
-const Caraousel = styled.div``
+const Caraousel = styled.div`
+    width:50%;
+    display:flex;
+    flexx-direction:row;
+    justify-content:center;
+    align-item:center;
+`
 const MeetingLink=styled.div`
     display:flex;
     flex-direction:row;
     justify-content:space-between;
     align-content:center;
     height:fit-content;
-    width:430px;
-    padding-bottom:24px;
+    width:470px;
+    margin-top:12px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
     
 
 `
@@ -140,21 +189,35 @@ const MeetingButton = styled.button`
     border-radius:5px;
     font-size:16px;
     font-family:sans-serif;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px;
 `
 const MCode = styled.input`
     font-size:16px;
     font-family:sans-serif;
     color:#5F6368;
-    border: 1px solid #5F6368;
+    border: 0;
     height:44px;
-    border-radius:5px;
-    width:242px;
+    
+    width:150px;
+
+    &:focus{
+        border:0;
+        outline:none;
+    }
+
+    &::valid Join{
+        color:#5F6368;
+    }
 `
 const Line = styled.div`
     height:1px;
     width:538px;
     border-bottom:1px solid  #dadce0;
     margin:16px 0 0;
+    margin-bottom:35px;
   `
 const LearnMore = styled.p`
     text-decoration:none;
@@ -166,4 +229,51 @@ const Link = styled.a`
     font-size:16px;
     color:#1a73e8;
     font-family:sans-serif;
+    
     `
+const Key = styled.label`
+height:24px;
+width:60px;
+padding:10px 15px;
+
+`
+const SearchD = styled.div`
+    border:1px solid  #5F6368;
+    border-radius:5px;
+    height:fit-content;
+    width:220px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+    &:focus-within{
+        border:2px solid #1a73e8;
+        width:236px;
+    }
+
+`
+const JoinD = styled.div`
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    width:280px;
+
+    Mcode:valid {
+        
+            color:#5F6368;
+        }
+`
+const Join = styled.button`
+    background-color:transparent;
+    color:#1a73e8;
+    height:44px;
+    font-size:16px;
+    font-family:sans-serif;
+    width:60px;
+    border:0;
+
+    
+
+    
+`

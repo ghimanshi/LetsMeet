@@ -27,11 +27,14 @@ const myCollection = [
         text:"No one can join a meeting unless invited or admitted by the host"
     }
 ]
+const color1=['#1a73e8','#dadce0','#dadce0']
+const color2=['#dadce0','#1a73e8','#dadce0']
+const color3=['#dadce0','#dadce0','#1a73e8']
+
 const Carousel =()=>{
 
     const CollectionSize = myCollection.length;
     const [index, setActiveStep] = useState(0);
-
     function updateIndex(){
         const newIndex = index+1;
         if(index === CollectionSize-1)
@@ -56,6 +59,8 @@ const Carousel =()=>{
         
     }
 
+    
+
     return(
         <Wrapper>
         <Image>
@@ -64,10 +69,15 @@ const Carousel =()=>{
             <Button onClick={()=>updateIndex()}><MdKeyboardArrowRight size={30} color="#5F6368"/></Button>
         </Image>
         <Text>
-            <Heading><p>{myCollection[index].heading}</p></Heading>
+            <Heading><p><b>{myCollection[index].heading}</b></p></Heading>
             <Content><p>{myCollection[index].text}</p></Content>
 
         </Text>
+        <Dots>
+            <Dot style={{backgroundColor:`${color1[index]}`}}></Dot>
+            <Dot style={{backgroundColor:`${color2[index]}`}}></Dot>
+            <Dot style={{backgroundColor:`${color3[index]}`}}></Dot>
+        </Dots>
         </Wrapper>
     )
     
@@ -75,6 +85,17 @@ const Carousel =()=>{
 
 export default Carousel;
 
+const Dots = styled.div`
+    display:flex;
+    flex-direction:row;
+    width:fit-content;
+`
+const Dot = styled.div`
+    height:6px;
+    width:6px;
+    border-radius: 3px;
+    margin:0 4px;
+`
 const Button = styled.button`
     background-color:transparent;
     border: 0;

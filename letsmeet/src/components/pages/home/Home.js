@@ -1,5 +1,6 @@
 import React from 'react';
 import Date from './date'
+import { useState } from 'react';
 import styled from 'styled-components';
 import gmeet from './../../../assets/icons/gmeet.svg';
 import {BiHelpCircle} from 'react-icons/bi';
@@ -7,8 +8,11 @@ import {MdOutlineFeedback,MdOutlineApps,MdAccountCircle,MdKeyboard} from 'react-
 import {IoIosSettings} from 'react-icons/io';
 import {AiOutlineVideoCameraAdd} from 'react-icons/ai';
 import Carousel from './carousel';
+import {motion} from 'framer-motion';
 
 const Home=()=>{
+    const [join, setjoin] = useState('none');
+
     return(
         <HomePage>
             <Nav>
@@ -41,10 +45,15 @@ const Home=()=>{
                     <MeetingButton><AiOutlineVideoCameraAdd size={20}/><div ><b>New Meeting</b></div></MeetingButton>
                     <JoinD>
                     <SearchD>
-                    <Key><MdKeyboard size={24} color="#5F6368"/></Key>
-                    <MCode id='idform' type='text' placeholder='Enter a code or link'></MCode>
+                    <Key><MdKeyboard size={20}  color="#5F6368"/></Key>
+                    <MCode id='idform' type='text' placeholder='Enter a code or link' onFocus={()=>{
+                        setjoin('inline')
+                    }} 
+                    onBlur={()=>{
+                        setjoin('none')
+                    }}></MCode>
                     </SearchD>
-                    <Join>Join</Join>
+                    <Join style={{display:`${join}`}} >Join</Join>
                     </JoinD>
 
                     
@@ -78,6 +87,7 @@ const Nav = styled.div`
     align-content: center;
     background-color:white;
     margin:0;
+    padding:8px;
     position:sticky;
     
     `
@@ -89,7 +99,7 @@ const Gmeet = styled.div`
     justify-conetnt:center;
     height:100%;
     width:fit-content;
-    padding-left:10px;
+    margin-left:12px;
     `
 
 
@@ -122,9 +132,9 @@ const Sbutton = styled.button`
 
 
 const Text = styled.div`
-    padding:16px 40px;
     height:fit-content;
-    width:40%;
+    max-width: 35rem;
+    padding: 1em 3em;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -154,7 +164,7 @@ const Body = styled.div`
     display:flex;
     flex-wrap:wrap;
     flex-direction:row;
-    justify-content:center;
+    justify-content:space-evenly;
     align-content:center;  
     width:100%;
     min-height:90vh;
@@ -200,8 +210,8 @@ const MCode = styled.input`
     color:#5F6368;
     border: 0;
     height:44px;
-    
-    width:150px;
+    border-radius:6px;
+    width:100%;
 
     &:focus{
         border:0;
@@ -232,16 +242,19 @@ const Link = styled.a`
     
     `
 const Key = styled.label`
-height:24px;
-width:60px;
 padding:10px 15px;
+display:flex;
+flex-direction:row;
+justify-content:center;
+align-items:center;
 
 `
+
 const SearchD = styled.div`
     border:1px solid  #5F6368;
-    border-radius:5px;
+    border-radius:6px;
     height:fit-content;
-    width:220px;
+    max-width:274px;
     display:flex;
     flex-direction:row;
     align-items:center;
@@ -272,8 +285,4 @@ const Join = styled.button`
     font-family:sans-serif;
     width:60px;
     border:0;
-
-    
-
-    
 `

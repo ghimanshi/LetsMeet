@@ -121,6 +121,7 @@ const Text = styled.div`
     flex-direction:column;
     align-items:center;
     padding:5px;
+    margin-top:12px;
     
 `
 const Heading = styled.div`

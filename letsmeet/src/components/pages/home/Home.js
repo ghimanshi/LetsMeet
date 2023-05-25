@@ -9,9 +9,11 @@ import {IoIosSettings} from 'react-icons/io';
 import {AiOutlineVideoCameraAdd} from 'react-icons/ai';
 import Carousel from './carousel';
 import {motion} from 'framer-motion';
+import Dropdown from './dropdown';
 
 const Home=()=>{
     const [join, setjoin] = useState('none');
+    const [meet, setmeet] = useState('none');
 
     return(
         <HomePage>
@@ -20,12 +22,11 @@ const Home=()=>{
                     <img src={gmeet} alt="Gmeet Icon" height={50} width={186}/>
                 </Gmeet>
                 <Utilities>
-                    <IconsDate >
-                        <DateDiv><Date/></DateDiv>
-                        <Sbutton><BiHelpCircle size={24} color="#5F6368"/></Sbutton>
-                        <Sbutton><MdOutlineFeedback size={24} color="#5F6368"/></Sbutton>
-                        <Sbutton><IoIosSettings size={24} color="#5F6368"/></Sbutton>
-                    </IconsDate >
+                    <DateDiv><Date/></DateDiv>
+                    <Sbutton><BiHelpCircle size={24} color="#5F6368"/></Sbutton>
+                    <Sbutton><MdOutlineFeedback size={24} color="#5F6368"/></Sbutton>
+                    <Sbutton><IoIosSettings size={24} color="#5F6368"/></Sbutton>
+                    
 
                     <Icons>
                         
@@ -42,7 +43,15 @@ const Home=()=>{
                     We re-engineered the service that we built for secure<br/>business meetings, Google Meet, to make it free and<br/>available for all.
                 </SmallTextFont>
                 <MeetingLink>
-                    <MeetingButton><AiOutlineVideoCameraAdd size={20}/><div ><b>New Meeting</b></div></MeetingButton>
+                    <MeetingButton
+                    onClick={()=>{
+                        setmeet('inline')
+                    }} 
+                    ><AiOutlineVideoCameraAdd size={20}/><div ><b>New Meeting</b></div></MeetingButton>
+                    <div style={{height:`fit-content`, width:`fit-content`,position:`absolute`, display:`${meet}`}}
+                    onBlur={()=>{
+                        setmeet('none')
+                    }}><Dropdown/></div>
                     <JoinD>
                     <SearchD>
                     <Key><MdKeyboard size={20}  color="#5F6368"/></Key>
@@ -79,7 +88,7 @@ const HomePage=styled.div`
     margin:0;
     `
 const Nav = styled.div`
-    height:50px;
+    height:64px;
     wdith:100%;
     display:flex;
     flex-direction:row;
@@ -94,12 +103,12 @@ const Nav = styled.div`
 
 const Gmeet = styled.div`
     display:flex;
-    flex-direction:row;
+    flex-direction:column;
     align-content:center;
-    justify-conetnt:center;
-    height:100%;
+    justify-content:center;
     width:fit-content;
-    margin-left:12px;
+    padding:12px;
+    width-content;
     `
 
 
@@ -108,7 +117,10 @@ const Utilities = styled.div`
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
-    width:425px;`
+    width:425px;
+    background-color:white;
+    overflow:visible;
+    `
 
 const IconsDate = styled.div`
     display:flex;
@@ -164,10 +176,10 @@ const Body = styled.div`
     display:flex;
     flex-wrap:wrap;
     flex-direction:row;
-    justify-content:space-evenly;
+    justify-content:space-between;
     align-content:center;  
     width:100%;
-    min-height:90vh;
+    min-height:86%;
     position:absolute;
 `
 const Caraousel = styled.div`
@@ -203,6 +215,7 @@ const MeetingButton = styled.button`
     justify-content:space-between;
     align-items:center;
     padding:13px;
+    cursor:pointer
 `
 const MCode = styled.input`
     font-size:16px;

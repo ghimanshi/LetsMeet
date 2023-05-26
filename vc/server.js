@@ -14,22 +14,22 @@ const peerServer = ExpressPeerServer(server, {
 })
 app.set('view engine', 'ejs')
 app.use(cors())
-app.use(express.static('public'))
 app.use('/peerjs', peerServer)
 app.get('/', (req, res) => {
   res.redirect(`/${uuidV4()}`)
-  console.log(res)
 })
 
 app.get('/:room', (req, res) => {
-  console.log(req.params.room)
   res.render('room', { roomId: req.params.room })
+  console.log("Sent: ",req.params.room)
 })
 
 io.on('connection', socket => {
   socket.on('join-room', (roomId, userId) => {
+    console.log("room: ",roomId)
     console.log("joined room")
-    socket.join(roomId)
+    console.log("user: ",userId)
+    socket.join(userId)
     socket.to(roomId).emit('user-connected', userId)
   })
 })

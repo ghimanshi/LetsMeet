@@ -1,84 +1,132 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import React from "react";
 import styled from 'styled-components';
-import socketIO from 'socket.io-client'
+import io from 'socket.io-client'
 import "../../index.css";
 import {Peer} from "peerjs"
-const socket = socketIO.connect("http://localhost:3000/")
-socket.on("connect_error", (err) => {
+const socket = io("http://localhost:3000",{debug:true})
+socket.on("invalid-frame-header", (err) => {
     console.log(`connect_error due to ${err.message}`);
   });
 
-const Video = ()=>{
-    const [ROOM_ID, setROOMID] = useState();
-    const [url, setUrl] = useState();
-    useEffect(() => {
-        fetch("http://localhost:3000/")
-          .then((res)=>{console.log(res.url)})
-      }, []);
-      useEffect(() => {
-        fetch("http://localhost:3000/:room")
-          .then((res)=>{console.log(res)})
-      }, []);
-    const videoContainer = document.getElementById('videoGrid')
-    console.log(videoContainer)
-    let myVideoStream
-    const myVideo = document.createElement('div')
-    myVideo.classList.add('video')
-    myVideo.muted = true
-    
-    var peer = new Peer(undefined,{
-        path:'/peerjs',
-        host: '/',
-        port: '3000'
-      })
+  socket.on('connect', () => {
+    console.log('Connected to server');
+  });
+  socket.on('disconnect', () => {
+    console.log('Disconnected to server');
+  });
+  
 
-      const connectToNewUser =(userId, stream)=>{
-        console.log('newuser', userId)
-        const call = peer.call(userId, stream)
-        const video = document.createElement('div')
-        myVideo.classList.add('video')
-        call.on('stream', userVideoStream=>{
-          addVideoStream(video, userVideoStream)
-        })
+const Video = ()=>{
+    const [ROOM_ID,setRoom] = useState();
+    console.log("roomId1: ",ROOM_ID);
+    const users = []
+    const VideoRef = useRef();
+    const vid = useRef();
+    console.log(VideoRef.current)
+    let myVideoStream
+    const myVideo = document.createElement('video')
+    myVideo.muted = true
+
+
+    useEffect(() => {
+      async function fetchData() {
+        try {
+          const res = await fetch('http://localhost:3000/');
+          const lastPart = res.url.substr(res.url.lastIndexOf('/') + 1);
+              console.log(lastPart)
+              setRoom(lastPart)
+              console.log("roomid: ",ROOM_ID) // Do something with the data
+        } catch (error) {
+          console.log('Error fetching data:', error);
+        }
       }
-      
-      function addVideoStream(video, stream) {
-        video.srcObject = stream
-        video.addEventListener('loadedmetadata', () => {
-          video.play()
-        })
-        videoContainer.append(video)
-      }
-      peer.on('open', id=>{
-        socket.emit('join-room', ROOM_ID, id);
-      })
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: false
-      }).then(stream => {
-        myVideoStream = stream;
-        addVideoStream(myVideo, stream)
-      
-        peer.on('call',call=>{
-          call.answer(stream)
-          console.log("called")
-          const video = document.createElement('video')
-          call.on('stream', userVideoStream =>{
-            addVideoStream(video, userVideoStream)
+      fetchData();
+    }, []);
+
+    useEffect(() => {
+        
+        // fetch("http://localhost:3000/")
+        //   .then((res)=>{console.log(res.url)
+        //   const lastPart = res.url.substr(res.url.lastIndexOf('/') + 1);
+        //   console.log(lastPart)
+        //   setRoom(lastPart)
+        //   console.log("roomid: ",ROOM_ID)})
+          
+          
+        if(ROOM_ID!=null){
+          var peer = new Peer(undefined,{
+            path:'/peerjs',
+            host: '/',
+            port: '3000'
           })
-        }, function(err) {
-          console.log('Failed to get local stream' ,err);
-        })
-      
-        socket.on('user-connected',(userId)=>{
-          console.log(userId)
-          setTimeout(connectToNewUser,1000,userId,stream)
-        })
-      })
-      
+    
+          peer.on('open', id=>{
+            socket.emit('join-room', ROOM_ID ,id);
+            console.log("roomid: ",ROOM_ID) // Do something with the data
+            console.log("id:", id)
+          })
+          const connectToNewUser =(userId, stream)=>{
+            console.log('newuser: ', userId)
+            const call = peer.call(userId, stream)
+            const video = document.createElement('video')
+            call.on('stream', userVideoStream=>{
+              addVideoStream(video, userVideoStream)
+            })
+          }
+          
+          function addVideoStream(video, stream) {
+            console.log("Video: ",stream)
+            video.srcObject = stream
+            console.log("VideoSRC: ",video.srcObject)
+            video.addEventListener('loadedmetadata', () => {
+              video.play()
+              .catch(error => {
+                // Handle any errors that occur while trying to play the video
+                console.log('Error playing video:', error);
+              });
+            })
+            console.log(VideoRef.current)
+            VideoRef.current.append(video)
+          }
+          
+          navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+          }).then(stream => {
+            myVideoStream = stream;
+            addVideoStream(myVideo, stream)
+          
+            peer.on('call',call=>{
+              call.answer(stream)
+              console.log("called")
+              const video = document.createElement('video')
+              call.on('stream', userVideoStream =>{
+                addVideoStream(video, userVideoStream)
+              })
+            }, function(err) {
+              console.log('Failed to get local stream' ,err);
+            })
+            socket.on('user-connected',(userId)=>{
+              console.log("hehe")
+              console.log("user: ",userId)
+              users.append(userId)
+              console.log(users)
+              setTimeout(connectToNewUser,1000,userId,stream)
+            })
+          
+            
+          })
+          
+          console.log("check")
+          socket.on('join-room', () => {
+            console.log('Received message:');
+          });
+          }
+      },[]);
+    
     return(
-        <div id="videoGrid">
+        <div ref={VideoRef} id="videoGrid">
             
         </div>
     );
